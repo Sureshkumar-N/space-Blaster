@@ -4,7 +4,6 @@ import bulletImg from '../image/bullet.png';
 export default function Bullet({index,bullet,setBullets})  {
     if(bullet.y===0){
         setBullets((preBullet)=>{
-            console.log(preBullet,index);
            return preBullet.filter((_,i)=> index!==i);
            
         });

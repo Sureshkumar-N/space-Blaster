@@ -3,16 +3,11 @@ import Playerspaceship from './Playerspaceship';
 import Bullet from './Bullet';
 import Enemy from './Enemy';
 export default function Playground() {
-    const [position,setPosition] =useState({x:750,y:720});
+    //console.log(window.innerHeight);
+    const [position,setPosition] =useState({x:780,y:window.screen.height-160});
     const [bullets,setBullets] =useState([]);
     const [isShoot, setShoot] = useState(false);
-    const [timer,setTimer] = useState(30000);
-    const enemy1={x:Math.floor(((Math.random()*1000)%window.innerWidth)),y:0};
-    const enemy2={x:Math.floor(((Math.random()*1000)%window.innerWidth)),y:0};
-    const enemy3={x:Math.floor(((Math.random()*1000)%window.innerWidth)),y:0};
-    const enemy4={x:Math.floor(((Math.random()*1000)%window.innerWidth)),y:0};
-    const enemy5={x:Math.floor(((Math.random()*1000)%window.innerWidth)),y:0};
-    const [enemy,setEnemy]=useState([enemy1,enemy2,enemy3,enemy4,enemy5]);
+    const [enemy,setEnemy]=useState([]);
     useEffect(()=>{
         const handlekeydown = (event) =>{
            if(event.key===" ")
@@ -59,37 +54,68 @@ export default function Playground() {
         };
         }   
     }, [bullets]);
-
+    useEffect(()=>{
+       const Interval= setInterval(()=>{
+            const newEnemy={id:Date.now(),x:random(),y:0};
+            console.log(newEnemy);
+            setEnemy((preEnemy)=>(
+                [...preEnemy,newEnemy]
+            ))
+        },4000);
+        return ()=>{
+            clearInterval(Interval);
+        }
+    },[]);
     useEffect(()=>{
         if(enemy.length>0) {
-            setInterval(()=>{
+           const Interval= setInterval(()=>{
                 setEnemy((preenemy)=>{
                     return preenemy.map((val)=>({
                         ...val,
                         y:val.y+10
                     }))
                 });
-            },1000);
-            setTimer((time)=>time-1);
-        }else {
-            alert("game over");
+            },300);
+            return () => {
+                clearInterval(Interval);
+            };
         }
     },[enemy]);
-    console.log(enemy);
+    useEffect(()=>{ 
+        for(var i=0;i<bullets.length;i++) {
+            for(var j=0;j<enemy.length;j++) {
+                if(checkcollision(bullets[i],enemy[j])) {
+                    setBullets((prevBullets)=>prevBullets.filter((_,index)=>index!==i));
+                    setEnemy((preEnemy)=>preEnemy.filter((_,index)=>index!==j));
+                    return;
+                }
+            }
+        }
+    },[enemy,bullets]);
     return(
         <div>
-            <button onClick={()=>setTimer((time)=>time-1)} >start</button>
             <Playerspaceship position={position} setPosition={setPosition}/>
             {
+                
                 bullets.map((bullet,i)=>{
                     return <Bullet key={i} index={i} bullet={bullet} setBullets={setBullets}/>
                 })
             }
-            {
+            { 
                 enemy.map((obj,i)=>{
-                    return <Enemy key={i} index={i} position={obj} setEnemy={setEnemy}/>
+                    return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} />
                 })
             }
         </div>
     );
+}
+function random(){
+    return Math.floor(Math.random()*(window.screen.width-10)+10);
+}
+
+function checkcollision(bullet,enemy) {
+    if((bullet.x>=enemy.x && bullet.x<=enemy.x+50)&&(bullet.y+30>enemy.y && bullet.y<enemy.y+50)) {
+        return true;
+    }
+    return false;
 }
