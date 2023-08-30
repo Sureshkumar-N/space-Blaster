@@ -2,12 +2,14 @@ import {useState,useEffect} from 'react';
 import Playerspaceship from './Playerspaceship';
 import Bullet from './Bullet';
 import Enemy from './Enemy';
+import blastimg from '../image/blast.gif';
 export default function Playground() {
     //console.log(window.innerHeight);
     const [position,setPosition] =useState({x:780,y:window.screen.height-160});
     const [bullets,setBullets] =useState([]);
     const [isShoot, setShoot] = useState(false);
     const [enemy,setEnemy]=useState([]);
+    const [blast,setBlast]=useState(null);
     useEffect(()=>{
         const handlekeydown = (event) =>{
            if(event.key===" ")
@@ -87,11 +89,21 @@ export default function Playground() {
                 if(checkcollision(bullets[i],enemy[j])) {
                     setBullets((prevBullets)=>prevBullets.filter((_,index)=>index!==i));
                     setEnemy((preEnemy)=>preEnemy.filter((_,index)=>index!==j));
+                    //console.log(enemy[j]);
+                    setBlast({
+                        position:'absolute',
+                        left:enemy[j].x,
+                        right:enemy[j].y,
+                        width:'200px',
+                        height:'200px'
+                    });
+                    setTimeout(()=>setBlast(null),1000);
                     return;
                 }
             }
         }
     },[enemy,bullets]);
+   // console.log(blast);
     return(
         <div>
             <Playerspaceship position={position} setPosition={setPosition}/>
@@ -106,6 +118,7 @@ export default function Playground() {
                     return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} />
                 })
             }
+            {blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
         </div>
     );
 }
