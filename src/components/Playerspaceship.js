@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import Spaceship from '../image/spaceship-png.png';
 
+
 export default function Playerspaceship({position,setPosition}) {
     const[left,setLeft] =useState(false);
     const[right,setRight] =useState(false);
@@ -51,7 +52,8 @@ export default function Playerspaceship({position,setPosition}) {
                 left: `${position.x-45}px`,
                 top: `${position.y}px`,
                 width: '75px', 
-                height: '75px'
+                height: '75px',
+                transition:'0.25s'
             }}
             />
         </div>
