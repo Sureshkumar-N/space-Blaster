@@ -1,9 +1,9 @@
 import enemyImg from '../image/images.png';
 
-export default function Enemy({index,position,setEnemy}) {
-    if(position.y>window.innerHeight+100){
+export default function Enemy({id,position,setEnemy}) {
+    if(position.y>710){
         setEnemy((preEnemy)=>(
-            preEnemy.filter((_,i)=> i!==index)
+            preEnemy.filter((obj)=> obj.id!==id)
         ))
     }
     return(
