@@ -13,7 +13,8 @@ export default function Bullet({index,bullet,setBullets})  {
         style={{
             position:'absolute',
             left:`${bullet.x}px`,
-            top:`${bullet.y}px`
+            top:`${bullet.y}px`,
+            height:'50px'
         }}
         />
     );

@@ -1,7 +1,8 @@
 import enemyImg from '../image/images.png';
 
 export default function Enemy({id,position,setEnemy}) {
-    if(position.y>710){
+    //console.log(window.height);
+    if(position.y+51>window.innerHeight){
         setEnemy((preEnemy)=>(
             preEnemy.filter((obj)=> obj.id!==id)
         ))

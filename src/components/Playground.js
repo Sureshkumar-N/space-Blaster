@@ -29,8 +29,8 @@ export default function Playground() {
     useEffect(()=>{
         if(isShoot) {
             const newBullet={
-                x:position.x,
-                y:position.y-10
+                x:position.x-10,
+                y:position.y
             };
             const newBullets=[...bullets];
             newBullets.push(newBullet);
