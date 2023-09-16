@@ -14,7 +14,8 @@ export default function Bullet({index,bullet,setBullets})  {
             position:'absolute',
             left:`${bullet.x}px`,
             top:`${bullet.y}px`,
-            height:'50px'
+            height:'50px',
+            width:'13px'
         }}
         />
     );

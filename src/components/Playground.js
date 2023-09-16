@@ -1,4 +1,6 @@
+import './Playground.css';
 import {useState,useEffect} from 'react';
+import { useLocation } from 'react-router-dom';
 import Playerspaceship from './Playerspaceship';
 import Bullet from './Bullet';
 import Enemy from './Enemy';
@@ -10,14 +12,36 @@ export default function Playground() {
     const [isShoot, setShoot] = useState(false);
     const [enemy,setEnemy]=useState([]);
     const [blast,setBlast]=useState(null);
+    const [left,setLeft] =useState(false);
+    const [right,setRight] =useState(false);
+    const location = useLocation();
+    const [score,setScore] =useState(0);
+    const screenWidth=window.innerWidth;
+    console.log(location.state);
     useEffect(()=>{
         const handlekeydown = (event) =>{
-           if(event.key===" ")
-                setShoot(true);
+            switch(event.key) {
+                case "ArrowLeft":
+                    setLeft(true);
+                    break;
+                case "ArrowRight":
+                    setRight(true);
+                    break;
+                case " ":
+                    setShoot(true);
+            }
         };
         const handlekeyup = (event) =>{
-            if(event.key===" ")
-                setShoot(false);
+            switch(event.key) {
+                case "ArrowLeft":
+                    setLeft(false);
+                    break;
+                case "ArrowRight":
+                    setRight(false);
+                    break;
+                case " ":
+                    setShoot(false);
+            }
         };
         window.addEventListener('keydown',handlekeydown);
         window.addEventListener('keyup',handlekeyup);
@@ -26,6 +50,21 @@ export default function Playground() {
             window.removeEventListener('keyup', handlekeyup);
         };
     },[]);
+
+    useEffect(()=>{
+        const spaceshipSpeed = 20;
+        let newPosition = { ...position };
+        if (left && newPosition.x >= 50) {
+            newPosition.x -= spaceshipSpeed;
+            setLeft(false);
+        }
+        if (right && newPosition.x<screenWidth) {
+            newPosition.x += spaceshipSpeed;
+            setRight(false);
+        }
+        setPosition(newPosition);
+    },[left,right]);
+
     useEffect(()=>{
         if(isShoot) {
             const newBullet={
@@ -59,7 +98,7 @@ export default function Playground() {
     useEffect(()=>{
        const Interval= setInterval(()=>{
             const newEnemy={id:Date.now(),x:random(),y:0};
-            console.log(newEnemy);
+            //console.log(newEnemy);
             setEnemy((preEnemy)=>(
                 [...preEnemy,newEnemy]
             ))
@@ -87,16 +126,19 @@ export default function Playground() {
         for(var i=0;i<bullets.length;i++) {
             for(var j=0;j<enemy.length;j++) {
                 if(checkcollision(bullets[i],enemy[j])) {
+                    const pos=enemy[j];
                     setBullets((prevBullets)=>prevBullets.filter((_,index)=>index!==i));
                     setEnemy((preEnemy)=>preEnemy.filter((_,index)=>index!==j));
-                    //console.log(enemy[j]);
+                    //console.log(pos,"td");
                     setBlast({
                         position:'absolute',
-                        left:enemy[j].x,
-                        right:enemy[j].y,
+                        left:pos.x-50,
+                        top:pos.y-65,
                         width:'200px',
                         height:'200px'
                     });
+                    setScore(s=>s+1);
+                    //console.log(blast,"gf");
                     setTimeout(()=>setBlast(null),1000);
                     return;
                 }
@@ -105,25 +147,34 @@ export default function Playground() {
     },[enemy,bullets]);
    // console.log(blast);
     return(
-        <div>
-            <Playerspaceship position={position} setPosition={setPosition}/>
-            {
-                
-                bullets.map((bullet,i)=>{
-                    return <Bullet key={i} index={i} bullet={bullet} setBullets={setBullets}/>
-                })
-            }
-            { 
-                enemy.map((obj,i)=>{
-                    return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} />
-                })
-            }
-            {blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
+        <div className='ground'>
+            <div className='field'>
+                <Playerspaceship position={position} />
+                {
+                    
+                    bullets.map((bullet,i)=>{
+                        return <Bullet key={i} index={i} bullet={bullet} setBullets={setBullets}/>
+                    })
+                }
+                { 
+                    enemy.map((obj,i)=>{
+                        return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} shipPosition={position}/>
+                    })
+                }
+                {blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
+            </div>
+            <div className='score'>
+               <h1>{location.state.value}</h1>
+               <h1>Your Score</h1>
+               {score}
+            </div>
         </div>
     );
 }
+
 function random(){
-    return Math.floor(Math.random()*(window.screen.width-10)+10);
+    var pos=Math.floor(Math.random()*(window.screen.width-10)+10);
+    return pos>700 ? pos-200:pos;
 }
 
 function checkcollision(bullet,enemy) {
