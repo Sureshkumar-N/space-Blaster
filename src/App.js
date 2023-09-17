@@ -5,10 +5,12 @@ import Playground from './components/Playground';
 function App() {
   return (
     <div className='app'>
+      <div className='stars'></div>
+      <div className='twinkling'></div>
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/game' element={<Playground/>}/>
-    </Routes>
+      </Routes>
     </div>
   );
 }

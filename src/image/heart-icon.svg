@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <mask id="heart-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
+      <image width="40" height="40" xlink:href="https://icons8.com/icon/85038/heart" />
+    </mask>
+  </defs>
+</svg>

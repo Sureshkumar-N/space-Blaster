@@ -1,13 +1,23 @@
 .ground{
     display: flex;
+   
 }
 .field{
     width: 85%;
     height: 100vh;
-    background-color: black;
+    
 }
 .score{
     width: 15%;
-    height: 100%;
+    height: 100vh;
     text-align: center;
+    background: white;
+    font-size: 10px;
+    font-weight: 600;
+}
+.score>h1 {
+    padding: 10px 0 0 10px;
+}
+.life-icon>img{
+    padding: 10px;
 }

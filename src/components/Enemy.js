@@ -1,19 +1,23 @@
 import { useEffect } from 'react';
-import enemyImg from '../image/images.png';
+import enemyImg from '../image/enemy.png';
 
-export default function Enemy({id,position,setEnemy,shipPosition}) {
+export default function Enemy({id,position,setEnemy,shipPosition,setCount,setStatus}) {
     //console.log(window.height);
     
     useEffect(()=> {
         if(position.y+51>window.innerHeight){
             setEnemy((preEnemy)=>(
                 preEnemy.filter((obj)=> obj.id!==id)
-            ))
+            ));
         }
-        if(shipPosition.x<=position.x && shipPosition.x<=position.x+75 && shipPosition.y-100<=position.y+50) {
-            console.log("efef");
+        if((shipPosition.x-35<=position.x+25 && shipPosition.x+35>=position.x-25) && (shipPosition.y-25<=position.y+20 && shipPosition.y+35>=position.y-25)) {
+            setCount(s=>s-1);
+            setStatus(true);
+            setTimeout(()=>setStatus(false),1000);
+            setEnemy((preEnemy)=>(
+                preEnemy.filter((obj)=> obj.id!==id)
+            ));
         }
-
     },[position])
     return(
         <img src={enemyImg} alt='enemy' style={{
@@ -21,7 +25,7 @@ export default function Enemy({id,position,setEnemy,shipPosition}) {
             left:`${position.x}px`,
             top:`${position.y}px`,
             width:'50px',
-            height:'50px'
+            height:'40px'
         }}/>
     );
 }

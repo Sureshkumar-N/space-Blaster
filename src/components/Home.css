@@ -1,6 +1,6 @@
 
 .home{
-    background: black;
+    background: transparent;
     height:100vh;
     display: flex;
     flex-direction: column;

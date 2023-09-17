@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+*{
+    font-family: 'Press Start 2P',cursive;
+}
+.stars, .twinkling {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.stars {
+    background: #000 url("./image/stars.png") repeat top center;
+    z-index: -1; 
+}
+.twinkling{
+    background: transparent url('./image/twinkling.png') repeat top center;
+    z-index: -2;
+}
+

@@ -5,8 +5,8 @@ import Playerspaceship from './Playerspaceship';
 import Bullet from './Bullet';
 import Enemy from './Enemy';
 import blastimg from '../image/blast.gif';
+import heart from '../image/icons8-heart-32.png';
 export default function Playground() {
-    //console.log(window.innerHeight);
     const [position,setPosition] =useState({x:780,y:window.screen.height-160});
     const [bullets,setBullets] =useState([]);
     const [isShoot, setShoot] = useState(false);
@@ -16,8 +16,9 @@ export default function Playground() {
     const [right,setRight] =useState(false);
     const location = useLocation();
     const [score,setScore] =useState(0);
+    const [shipStatus,setStatus]=useState(false);
+    const [count,setCount] = useState(3);
     const screenWidth=window.innerWidth;
-    console.log(location.state);
     useEffect(()=>{
         const handlekeydown = (event) =>{
             switch(event.key) {
@@ -58,7 +59,7 @@ export default function Playground() {
             newPosition.x -= spaceshipSpeed;
             setLeft(false);
         }
-        if (right && newPosition.x<screenWidth) {
+        if (right && newPosition.x<screenWidth-260) {
             newPosition.x += spaceshipSpeed;
             setRight(false);
         }
@@ -76,23 +77,24 @@ export default function Playground() {
             setBullets(newBullets);
         }
     },[isShoot]);
-    // console.log(bullets);
+   
     useEffect(() => {
-        if(bullets.length>0) {
-        const bulletSpeed = 10;
-        const bulletUpdateInterval = setInterval(() => {
-          setBullets((prevBullets) =>
-            prevBullets.map((bullet) => ({
-              ...bullet,
-              y: bullet.y - bulletSpeed,
-            }))
-          );
-          setShoot(false);
-        }, 40);
         
-        return () => {
-          clearInterval(bulletUpdateInterval);
-        };
+        if(bullets.length>0) {
+            const bulletSpeed = 10;
+            const bulletUpdateInterval = setInterval(() => {
+                setBullets((prevBullets) =>
+                        prevBullets.map((bullet) => ({
+                        ...bullet,
+                        y: bullet.y - bulletSpeed
+                    }))
+                );
+                setShoot(false);
+            }, 40);
+            
+            return () => {
+                clearInterval(bulletUpdateInterval);
+            };
         }   
     }, [bullets]);
     useEffect(()=>{
@@ -102,7 +104,7 @@ export default function Playground() {
             setEnemy((preEnemy)=>(
                 [...preEnemy,newEnemy]
             ))
-        },4000);
+        },3000);
         return ()=>{
             clearInterval(Interval);
         }
@@ -149,24 +151,35 @@ export default function Playground() {
     return(
         <div className='ground'>
             <div className='field'>
-                <Playerspaceship position={position} />
+                {!shipStatus ? (
+                    <Playerspaceship position={position} />
+                    ):(
+                        <img src={blastimg} style={{height:'100px',width:'100px'}} alt='blast' />
+                    )}
                 {
-                    
                     bullets.map((bullet,i)=>{
                         return <Bullet key={i} index={i} bullet={bullet} setBullets={setBullets}/>
                     })
                 }
                 { 
                     enemy.map((obj,i)=>{
-                        return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} shipPosition={position}/>
+                        return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} shipPosition={position} setCount={setCount} setStatus={setStatus}/>
                     })
                 }
-                {blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
+                { blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
             </div>
             <div className='score'>
-               <h1>{location.state.value}</h1>
-               <h1>Your Score</h1>
-               {score}
+                <div className='life-icon'>
+                    {
+                        Array.from({length:count}).map((_,i)=>(
+                            <Lifeicon key={i} icon={heart}/>
+                        ))}
+                </div>
+                <div>
+                    <h1>{location.state.value}</h1>
+                    <h1>Your Score</h1>
+                    <h1>{score}</h1>
+                </div>
             </div>
         </div>
     );
@@ -178,8 +191,12 @@ function random(){
 }
 
 function checkcollision(bullet,enemy) {
-    if((bullet.x>=enemy.x && bullet.x<=enemy.x+50)&&(bullet.y+30>enemy.y && bullet.y<enemy.y+50)) {
+    if((bullet.x>=enemy.x-25 && bullet.x<=enemy.x+50)&&(bullet.y+30>enemy.y && bullet.y<enemy.y+50)) {
         return true;
     }
     return false;
+}
+
+function Lifeicon({icon}) {
+    return <img src={icon} alt="heart" style={{width:'40px',height:'40px'}}/>
 }
