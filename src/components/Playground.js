@@ -18,6 +18,7 @@ export default function Playground() {
     const [score,setScore] =useState(0);
     const [shipStatus,setStatus]=useState(false);
     const [count,setCount] = useState(3);
+    const [power,setPower] = useState({height:`${100}%`,backgroundColor:"rgb(39, 182, 238)",width:`${0}%`,borderRadius:"25px"});
     const screenWidth=window.innerWidth;
     useEffect(()=>{
         const handlekeydown = (event) =>{
@@ -131,7 +132,6 @@ export default function Playground() {
                     const pos=enemy[j];
                     setBullets((prevBullets)=>prevBullets.filter((_,index)=>index!==i));
                     setEnemy((preEnemy)=>preEnemy.filter((_,index)=>index!==j));
-                    //console.log(pos,"td");
                     setBlast({
                         position:'absolute',
                         left:pos.x-50,
@@ -140,7 +140,12 @@ export default function Playground() {
                         height:'200px'
                     });
                     setScore(s=>s+1);
-                    //console.log(blast,"gf");
+    
+                    setPower((prevPower)=>({
+                        ...prevPower,
+                        width:parseInt(power.width.substring(0,2))<100 ? `${parseInt(power.width.substring(0,2))+5}%` : `${0}%`
+                    }));
+
                     setTimeout(()=>setBlast(null),1000);
                     return;
                 }
@@ -154,7 +159,13 @@ export default function Playground() {
                 {!shipStatus ? (
                     <Playerspaceship position={position} />
                     ):(
-                        <img src={blastimg} style={{height:'100px',width:'100px'}} alt='blast' />
+                        <img src={blastimg} style={{
+                            height:'200px',
+                            width:'200px',
+                            position:'absolute',
+                            left:`${position.x-110}px`,
+                            top:`${position.y-120}px`
+                        }} alt='blast' />
                     )}
                 {
                     bullets.map((bullet,i)=>{
@@ -163,7 +174,7 @@ export default function Playground() {
                 }
                 { 
                     enemy.map((obj,i)=>{
-                        return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} shipPosition={position} setCount={setCount} setStatus={setStatus}/>
+                        return <Enemy key={obj.id} id={obj.id} position={obj} setEnemy={setEnemy} shipPosition={position} setCount={setCount} setStatus={setStatus} setScore={setScore}/>
                     })
                 }
                 { blast!==null ? <img src={blastimg} style={blast} alt='blast'/> : null}
@@ -173,12 +184,16 @@ export default function Playground() {
                     {
                         Array.from({length:count}).map((_,i)=>(
                             <Lifeicon key={i} icon={heart}/>
-                        ))}
+                        ))
+                    }
                 </div>
-                <div>
+                <div className='score-container'>
                     <h1>{location.state.value}</h1>
                     <h1>Your Score</h1>
                     <h1>{score}</h1>
+                </div>
+                <div className='power'>
+                    <div className='level' style={power}></div>
                 </div>
             </div>
         </div>

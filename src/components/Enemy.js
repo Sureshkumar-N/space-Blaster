@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import enemyImg from '../image/enemy.png';
 
-export default function Enemy({id,position,setEnemy,shipPosition,setCount,setStatus}) {
+export default function Enemy({id,position,setEnemy,shipPosition,setCount,setStatus,setScore}) {
     //console.log(window.height);
     
     useEffect(()=> {
         if(position.y+51>window.innerHeight){
+            setScore((s)=>s-1);
             setEnemy((preEnemy)=>(
                 preEnemy.filter((obj)=> obj.id!==id)
             ));
         }
-        if((shipPosition.x-35<=position.x+25 && shipPosition.x+35>=position.x-25) && (shipPosition.y-25<=position.y+20 && shipPosition.y+35>=position.y-25)) {
+        if((shipPosition.x-35<=position.x+25 && shipPosition.x+30>=position.x-25) && (shipPosition.y-25<=position.y+20 && shipPosition.y+25>=position.y-20)) {
             setCount(s=>s-1);
             setStatus(true);
             setTimeout(()=>setStatus(false),1000);
