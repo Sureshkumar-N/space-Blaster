@@ -7,7 +7,7 @@ import Enemy from './Enemy';
 import blastimg from '../image/blast.gif';
 import heart from '../image/icons8-heart-32.png';
 export default function Playground() {
-    const [position,setPosition] =useState({x:780,y:window.screen.height-160});
+    const [position,setPosition] =useState({x:window.screen.width/2,y:window.screen.height-160});
     const [bullets,setBullets] =useState([]);
     const [isShoot, setShoot] = useState(false);
     const [enemy,setEnemy]=useState([]);
@@ -19,7 +19,8 @@ export default function Playground() {
     const [shipStatus,setStatus]=useState(false);
     const [count,setCount] = useState(3);
     const [power,setPower] = useState({height:`${100}%`,backgroundColor:"rgb(39, 182, 238)",width:`${0}%`,borderRadius:"25px"});
-    const screenWidth=window.innerWidth;
+
+    
     useEffect(()=>{
         const handlekeydown = (event) =>{
             switch(event.key) {
@@ -60,7 +61,7 @@ export default function Playground() {
             newPosition.x -= spaceshipSpeed;
             setLeft(false);
         }
-        if (right && newPosition.x<screenWidth-260) {
+        if (right && newPosition.x<window.screen.width-Math.floor(window.screen.width*10/100)) {
             newPosition.x += spaceshipSpeed;
             setRight(false);
         }
@@ -80,7 +81,6 @@ export default function Playground() {
     },[isShoot]);
    
     useEffect(() => {
-        
         if(bullets.length>0) {
             const bulletSpeed = 10;
             const bulletUpdateInterval = setInterval(() => {
@@ -98,18 +98,20 @@ export default function Playground() {
             };
         }   
     }, [bullets]);
+
     useEffect(()=>{
        const Interval= setInterval(()=>{
             const newEnemy={id:Date.now(),x:random(),y:0};
-            //console.log(newEnemy);
             setEnemy((preEnemy)=>(
                 [...preEnemy,newEnemy]
             ))
         },3000);
+
         return ()=>{
             clearInterval(Interval);
         }
     },[]);
+
     useEffect(()=>{
         if(enemy.length>0) {
            const Interval= setInterval(()=>{
@@ -125,6 +127,7 @@ export default function Playground() {
             };
         }
     },[enemy]);
+    
     useEffect(()=>{ 
         for(var i=0;i<bullets.length;i++) {
             for(var j=0;j<enemy.length;j++) {
@@ -152,7 +155,7 @@ export default function Playground() {
             }
         }
     },[enemy,bullets]);
-   // console.log(blast);
+   
     return(
         <div className='ground'>
             <div className='field'>

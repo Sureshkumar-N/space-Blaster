@@ -11,7 +11,14 @@ export default function Enemy({id,position,setEnemy,shipPosition,setCount,setSta
                 preEnemy.filter((obj)=> obj.id!==id)
             ));
         }
-        if((shipPosition.x-35<=position.x+25 && shipPosition.x+30>=position.x-25) && (shipPosition.y-25<=position.y+20 && shipPosition.y+25>=position.y-20)) {
+        const indexLeft=shipPosition.x-35;
+        const indexRight=shipPosition.x+35;
+        const top=shipPosition.y-32.5;
+        const bottom=shipPosition.y+32.5;
+
+        if((indexLeft<=position.x+30 && indexRight>=position.x-20) && (top<=position.y+20 && bottom>=position.y-20)) {
+            console.log(position);
+            console.log(shipPosition);
             setCount(s=>s-1);
             setStatus(true);
             setTimeout(()=>setStatus(false),1000);

@@ -1,0 +1,41 @@
+.carousel-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+.slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+.slide.active{
+    opacity: 1;
+}
+.left,.right{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: pointer;
+}
+  
+.left {
+    left: 10px;
+    
+}
+  
+.right {
+    right: 10px;
+}
