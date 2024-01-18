@@ -13,7 +13,7 @@ export default function Enemy({id,position,setEnemy,shipPosition,setCount,setSta
         }
         const indexLeft=shipPosition.x-35;
         const indexRight=shipPosition.x+35;
-        const top=shipPosition.y-32.5;
+        const top=shipPosition.y-32.6;
         const bottom=shipPosition.y+32.5;
 
         if((indexLeft<=position.x+30 && indexRight>=position.x-20) && (top<=position.y+20 && bottom>=position.y-20)) {
